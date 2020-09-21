@@ -14,9 +14,9 @@
 
 <div class="container">
   <header>
-    <h1>{{Mese}}</h1>
-    <div>&lt;--Precedente</div>
-    <div>Successivo--&gt;</div>
+    <h1></h1>
+    <div id="prev">&lt;--Precedente</div>
+    <div id="succ">Successivo--&gt;</div>
   </header>
   <ul id="days">
 
@@ -29,6 +29,7 @@
     <script id="calendar-template" type="text/x-handlebars-template">
       <!-- <li><h1></h1></li>
       <li class="holy"><span class="holyDay"></span></li> -->
+
       <li class="day" data-giorno="{{dateComplete}}">{{day}} {{month}}<span class="holyDay"></span></li>
     </script>
 

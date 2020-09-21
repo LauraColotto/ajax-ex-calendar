@@ -1,51 +1,106 @@
 $(document).ready(function(){
 
+
 // Data iniziale calendario
 
-  var data = "2018-01-01";
+  var data = "2018-02-01";
   var momentData = moment(data);
+
+
+  // $("#prev").click(function(){
+  //   if (momentData.month() > 0) {
+  //     $("#days").text("");
+  //
+  //     var mese = momentData.format("M") - 1;
+  //     if (mese < 10) mese = "0"+mese;
+  //     var newDate = momentData.format("YYYY") + "-" + mese + "-" +
+  //     momentData.format("01");
+  //     console.log(newDate);
+  //     data = newDate;
+  //     momentData = moment(data);
+  //     stampoGiorni();
+  //   } else {
+  //     alert("E' finito il calendario");
+  //   }
+  //
+  // });
+
+
+  $("#prev").click(function(){
+    if (momentData.month() > 0) {
+      $("#days").text("");
+
+      data = momentData.subtract(1, "months");
+      console.log(data.format("M"));
+      momentData = moment(data);
+      stampoGiorni();
+    } else {
+      alert("E' finito il calendario");
+    }
+
+  });
+
+  $("#succ").click(function(){
+    if (momentData.month() < 11) {
+      $("#days").text("");
+
+      data = momentData.add(1, "months");
+      console.log(data.format("M"));
+      momentData = moment(data);
+      stampoGiorni();
+    } else {
+      alert("E' finito il calendario");
+    }
+
+  });
+
 
 
 // Template del calendario
 
   var source = $("#calendar-template").html();
   var template = Handlebars.compile(source);
-
+  stampoGiorni();
 
 // Stampo i giorni del calendario
-  for (var i = 1; i <= momentData.daysInMonth(); i++ ){
 
+  function stampoGiorni(){
 
-    var context = {
-      "Mese": "",
-      "day": i,
-      "month": momentData.format("MMMM"),
-      "dateComplete": momentData.format("YYYY-MM-DD"),
-    };
+    // Stampo il mese corrente
+    $("h1").text(momentData.format("MMMM YYYY"));
 
-    var html = template(context);
-    $("#days").append(html);
-    momentData.add(1, "day");
-  }
+    for (var i = 1; i <= moment(data).daysInMonth(); i++ ){
 
+      var context = {
+        "day": i,
+        "month": momentData.format("MMMM"),
+        "dateComplete": momentData.format("YYYY-MM-DD"),
+      };
 
-  $.ajax(
-    {
-       "url": "https://flynn.boolean.careers/exercises/api/holidays?",
-       "data": {
-         "year": 2018,
-         "month": 0
-       },
-        "method": "GET",
-        "success": function(data){
-          printHoly(data.response);
+      var html = template(context);
+      $("#days").append(html);
+      momentData.add(1, "day");
+    }
+    momentData = moment(data);
+    $.ajax(
+      {
+         "url": "https://flynn.boolean.careers/exercises/api/holidays?",
+         "data": {
+           "year": 2018,
+           "month": moment(data).month()
+         },
+          "method": "GET",
+          "success": function(data){
+            printHoly(data.response);
 
-        },
-        "error": function(err){
-          alert("Errore");
-        },
-      }
-  )
+          },
+          "error": function(err){
+            alert("Errore");
+          },
+        }
+    )
+  };
+
 });
 
 
@@ -61,3 +116,5 @@ function printHoly(holidays) {
 
   }
 }
+
+// Evento click per i tasti avanti e indietro
