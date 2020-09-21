@@ -1,0 +1,16 @@
+*{
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+
+.container{
+  width:  1000px;
+  margin: 0 auto;
+}
+
+.holy{
+  color: red;
+  font-weight: bold;
+}
