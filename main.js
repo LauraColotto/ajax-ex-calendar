@@ -3,28 +3,14 @@ $(document).ready(function(){
 
 // Data iniziale calendario
 
-  var data = "2018-02-01";
+  var data = "2018-01-01";
   var momentData = moment(data);
 
 
-  // $("#prev").click(function(){
-  //   if (momentData.month() > 0) {
-  //     $("#days").text("");
-  //
-  //     var mese = momentData.format("M") - 1;
-  //     if (mese < 10) mese = "0"+mese;
-  //     var newDate = momentData.format("YYYY") + "-" + mese + "-" +
-  //     momentData.format("01");
-  //     console.log(newDate);
-  //     data = newDate;
-  //     momentData = moment(data);
-  //     stampoGiorni();
-  //   } else {
-  //     alert("E' finito il calendario");
-  //   }
-  //
-  // });
+// Imposto gli eventi Click
 
+
+  // Tasto precedente
 
   $("#prev").click(function(){
     if (momentData.month() > 0) {
@@ -39,6 +25,8 @@ $(document).ready(function(){
     }
 
   });
+
+  // Tasto successivo
 
   $("#succ").click(function(){
     if (momentData.month() < 11) {
@@ -56,18 +44,23 @@ $(document).ready(function(){
 
 
 
+// -------------------------------------------------------
+
 // Template del calendario
 
   var source = $("#calendar-template").html();
   var template = Handlebars.compile(source);
   stampoGiorni();
 
-// Stampo i giorni del calendario
+// Stampo i giorni del calendario attraverso una funzione
 
   function stampoGiorni(){
 
     // Stampo il mese corrente
     $("h1").text(momentData.format("MMMM YYYY"));
+
+
+    // Stampo i giorni del calendario in una lista ordinata
 
     for (var i = 1; i <= moment(data).daysInMonth(); i++ ){
 
@@ -82,6 +75,9 @@ $(document).ready(function(){
       momentData.add(1, "day");
     }
     momentData = moment(data);
+
+    // Richiamo l'url ajax
+
     $.ajax(
       {
          "url": "https://flynn.boolean.careers/exercises/api/holidays?",
@@ -91,6 +87,7 @@ $(document).ready(function(){
          },
           "method": "GET",
           "success": function(data){
+            // Prendo i dati per i giorni di festa
             printHoly(data.response);
 
           },
@@ -104,17 +101,22 @@ $(document).ready(function(){
 });
 
 
+// Funzione di stampo dei giorni di festa
+
 function printHoly(holidays) {
   for (var i = 0; i < holidays.length; i++) {
     console.log(holidays[i].date);
 
+
+    // Richiamo le chiavi dei giorni di festa e dei nomi delle festività
+
     var holiDate = holidays[i].date;
     var holiName = holidays[i].name;
+
+    // Li inserisco nell'html
 
     $(".day[data-giorno='"+holiDate+"']").addClass("holy");
     $(".day[data-giorno='"+holiDate+"'] span").text(" - " + holiName);
 
   }
-}
-
-// Evento click per i tasti avanti e indietro
+};
